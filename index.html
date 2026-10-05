@@ -36,7 +36,7 @@ a{color:var(--accent)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 
 /* language switch */
-[data-lang="fr"] .en,[data-lang="en"] .fr{display:none!important}
+[data-lang="fr"] .en,[data-lang="fr"] .de,[data-lang="en"] .fr,[data-lang="en"] .de,[data-lang="de"] .fr,[data-lang="de"] .en{display:none!important}
 
 /* top bar */
 .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -68,10 +68,16 @@ h1 .role em{font-style:normal;color:var(--accent);font-weight:700}
 .btn:hover{transform:translateY(-1px)}
 .btn svg{width:16px;height:16px}
 
-.idcard{display:grid;gap:14px}
-.photo{position:relative;border-radius:18px;overflow:hidden;background:#fff;aspect-ratio:4/4.2;max-width:100%;border:1px solid var(--line)}
-.photo img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
-.photo .tag{position:absolute;left:12px;bottom:12px;background:rgba(20,16,40,.82);color:#fff;font:500 12px/1 var(--f-mono);padding:8px 10px;border-radius:8px}
+.idcard{display:grid;gap:22px;justify-items:center;padding:28px 24px 24px;border:1px solid var(--line);border-radius:22px;background:var(--surface)}
+.avatar{position:relative;width:200px;height:200px;flex:none}
+.avatar::before{content:"";position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(from 210deg,var(--accent),var(--copper),var(--accent))}
+.avatar .clip{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;border:5px solid var(--surface);background:var(--surface)}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 0%;display:block;transform:scale(1.18);transform-origin:56% 12%}
+.avatar .status{position:absolute;right:14px;bottom:14px;width:22px;height:22px;border-radius:50%;background:#2FB67C;border:4px solid var(--surface)}
+.id-meta{text-align:center;display:grid;gap:4px}
+.id-meta b{font:700 18px/1.2 var(--f-display)}
+.id-meta span{font:500 12px/1.4 var(--f-mono);color:var(--muted)}
+.idcard pre.code{width:100%;font-size:12.5px}
 pre.code{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:14px;padding:16px 18px;font:13px/1.65 var(--f-mono);overflow-x:auto}
 .k{color:var(--code-kw)}.s{color:var(--code-str)}.n{color:var(--code-num)}.c{color:var(--code-cm)}
 
@@ -152,15 +158,14 @@ section.block:last-of-type{border-bottom:0}
 @media (max-width:760px){.contact{grid-template-columns:minmax(0,1fr)}}
 footer{padding-block:0 40px;color:var(--muted);font:12px/1.5 var(--f-mono);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
-@media (max-width:860px){.hero{grid-template-columns:minmax(0,1fr)}.idcard{grid-template-columns:minmax(0,180px) minmax(0,1fr);align-items:start}.photo{aspect-ratio:4/5}}
-@media (max-width:520px){.idcard{grid-template-columns:minmax(0,1fr)}.photo{max-width:220px}}
+@media (max-width:860px){.hero{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:520px){.avatar{width:160px;height:160px}.idcard{padding:22px 16px 16px}}
 
 @keyframes rise{from{transform:translateY(10px)}to{transform:none}}
 .hero > *{animation:rise .6s ease-out both}
 .hero > *:nth-child(2){animation-delay:.12s}
 </style>
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<style id="photo-original">.photo{aspect-ratio:720/1280!important;max-width:400px!important}.photo img{object-fit:contain!important;object-position:center!important}</style>
 </head>
 <body>
 
@@ -170,14 +175,15 @@ footer{padding-block:0 40px;color:var(--muted);font:12px/1.5 var(--f-mono);displ
   <div class="wrap">
     <a class="mono-mark" href="#top"><b>MG</b><span>ghannem.dev</span></a>
     <nav aria-label="Sections">
-      <a href="#experience"><span class="fr">Expérience</span><span class="en">Experience</span></a>
-      <a href="#skills"><span class="fr">Compétences</span><span class="en">Skills</span></a>
-      <a href="#education"><span class="fr">Formation</span><span class="en">Education</span></a>
-      <a href="#contact">Contact</a>
+      <a href="#experience"><span class="fr">Expérience</span><span class="en">Experience</span><span class="de">Berufserfahrung</span></a>
+      <a href="#skills"><span class="fr">Compétences</span><span class="en">Skills</span><span class="de">Kompetenzen</span></a>
+      <a href="#education"><span class="fr">Formation</span><span class="en">Education</span><span class="de">Ausbildung</span></a>
+      <a href="#contact"><span class="fr">Contact</span><span class="en">Contact</span><span class="de">Kontakt</span></a>
     </nav>
-    <div class="lang" role="group" aria-label="Langue / Language">
+    <div class="lang" role="group" aria-label="Langue / Language / Sprache">
       <button id="btn-fr" type="button" aria-pressed="true" data-set="fr">FR</button>
       <button id="btn-en" type="button" aria-pressed="false" data-set="en">EN</button>
+      <button id="btn-de" type="button" aria-pressed="false" data-set="de">DE</button>
     </div>
   </div>
 </header>
@@ -185,56 +191,57 @@ footer{padding-block:0 40px;color:var(--muted);font:12px/1.5 var(--f-mono);displ
 <main class="wrap" id="top">
   <div class="hero">
     <div>
-      <div class="eyebrow"><span class="dot"></span><span class="fr">Tunis, Tunisie · ouvert aux opportunités</span><span class="en">Tunis, Tunisia · open to opportunities</span></div>
+      <div class="eyebrow"><span class="dot"></span><span class="fr">Tunis, Tunisie · ouvert aux opportunités</span><span class="en">Tunis, Tunisia · open to opportunities</span><span class="de">Tunis, Tunesien · offen für neue Chancen</span></div>
       <h1>Mohieddine Ghannem
-        <span class="role"><span class="fr">Développeur <em>.NET</em> Full Stack Senior</span><span class="en">Senior <em>.NET</em> Full Stack Developer</span></span>
+        <span class="role"><span class="fr">Développeur <em>.NET</em> Full Stack Senior</span><span class="en">Senior <em>.NET</em> Full Stack Developer</span><span class="de">Senior <em>.NET</em> Full-Stack-Entwickler</span></span>
       </h1>
       <p class="lede">
         <span class="fr"><strong>6 ans</strong> à concevoir, développer et optimiser des applications d'entreprise robustes et scalables. Backend en <strong>C# / .NET Core</strong>, frontend en <strong>Angular</strong>, déploiement sur <strong>Azure</strong>. Spécialiste de la performance <strong>SQL Server</strong> et habitué aux équipes internationales.</span>
-        <span class="en"><strong>6 years</strong> designing, building and optimizing robust, scalable enterprise applications. Backend in <strong>C# / .NET Core</strong>, frontend in <strong>Angular</strong>, shipped on <strong>Azure</strong>. Specialized in <strong>SQL Server</strong> performance and used to working with international teams.</span>
+        <span class="en"><strong>6 years</strong> designing, building and optimizing robust, scalable enterprise applications. Backend in <strong>C# / .NET Core</strong>, frontend in <strong>Angular</strong>, shipped on <strong>Azure</strong>. Specialized in <strong>SQL Server</strong> performance and used to working with international teams.</span><span class="de"><strong>6 Jahre</strong> Erfahrung in Konzeption, Entwicklung und Optimierung robuster, skalierbarer Unternehmensanwendungen. Backend mit <strong>C# / .NET Core</strong>, Frontend mit <strong>Angular</strong>, Deployment auf <strong>Azure</strong>. Spezialisiert auf <strong>SQL-Server</strong>-Performance und Zusammenarbeit mit internationalen Teams.</span>
       </p>
       <div class="cta">
-        <a class="btn primary" href="#contact"><span class="fr">Me contacter</span><span class="en">Get in touch</span></a>
+        <a class="btn primary" href="#contact"><span class="fr">Me contacter</span><span class="en">Get in touch</span><span class="de">Kontakt aufnehmen</span></a>
         <a class="btn" href="https://www.linkedin.com/in/mohieddine-ghannem-408173165" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.2c0-1.24-.02-2.84-1.73-2.84-1.73 0-2 1.35-2 2.75V21h-4z"/></svg>
           LinkedIn</a>
       </div>
     </div>
     <div class="idcard">
-      <div class="photo"><img src="photo.jpg?v=4" width="720" height="1280" decoding="async" alt="Portrait de Mohieddine Ghannem"><span class="tag">// Tunis · UTC+1</span></div>
+      <div class="avatar"><div class="clip"><img src="photo.jpg?v=5" width="720" height="1280" alt="Mohieddine Ghannem" decoding="async"></div><span class="status" title="Disponible / Available / Verfügbar"></span></div>
+      <div class="id-meta"><b>Mohieddine Ghannem</b><span>// Tunis · UTC+1</span></div>
 <pre class="code" aria-label="C# object describing the developer"><span class="k">var</span> me = <span class="k">new</span> <span class="k">Developer</span>
 {
-    Name  = <span class="s">"Mohieddine Ghannem"</span>,
-    Years = <span class="n">6</span>,
-    Stack = [<span class="s">"C#"</span>, <span class="s">".NET 8"</span>, <span class="s">"Angular 19"</span>, <span class="s">"Azure"</span>],
-    Speaks = [<span class="s">"ar"</span>, <span class="s">"fr"</span>, <span class="s">"en"</span>, <span class="s">"de"</span>]
+  Name   = <span class="s">"Mohieddine Ghannem"</span>,
+  Years  = <span class="n">6</span>,
+  Stack  = [<span class="s">"C#"</span>, <span class="s">".NET 8"</span>, <span class="s">"Angular"</span>, <span class="s">"Azure"</span>],
+  Speaks = [<span class="s">"ar"</span>, <span class="s">"fr"</span>, <span class="s">"en"</span>, <span class="s">"de"</span>]
 };</pre>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat"><b>6</b><span class="fr">ans d'expérience</span><span class="en">years of experience</span></div>
-    <div class="stat"><b>4</b><span class="fr">entreprises depuis 2019</span><span class="en">companies since 2019</span></div>
-    <div class="stat"><b>5+</b><span class="fr">pays où j'ai formé des utilisateurs</span><span class="en">countries where I trained users</span></div>
-    <div class="stat"><b>Bac+5</b><span class="fr">Mastère génie logiciel</span><span class="en">Master's in software eng.</span></div>
+    <div class="stat"><b>6</b><span class="fr">ans d'expérience</span><span class="en">years of experience</span><span class="de">Jahre Erfahrung</span></div>
+    <div class="stat"><b>4</b><span class="fr">entreprises depuis 2019</span><span class="en">companies since 2019</span><span class="de">Unternehmen seit 2019</span></div>
+    <div class="stat"><b>5+</b><span class="fr">pays où j'ai formé des utilisateurs</span><span class="en">countries where I trained users</span><span class="de">Länder, in denen ich Anwender geschult habe</span></div>
+    <div class="stat"><b>Bac+5</b><span class="fr">Mastère génie logiciel</span><span class="en">Master's in software eng.</span><span class="de">Master Softwaretechnik</span></div>
   </div>
 
   <section class="block" id="experience">
-    <div class="rail"><h2><span class="fr">Expérience</span><span class="en">Experience</span></h2><p>2019 → <span class="fr">aujourd'hui</span><span class="en">present</span></p></div>
+    <div class="rail"><h2><span class="fr">Expérience</span><span class="en">Experience</span><span class="de">Berufserfahrung</span></h2><p>2019 → <span class="fr">aujourd'hui</span><span class="en">present</span><span class="de">heute</span></p></div>
     <div class="jobs">
       <article class="job current">
-        <div class="job-head"><h3><span class="fr">Développeur .NET Full Stack Senior</span><span class="en">Senior .NET Full Stack Developer</span></h3><span class="when"><span class="fr">Juin 2022 – Présent</span><span class="en">Jun 2022 – Present</span></span></div>
+        <div class="job-head"><h3><span class="fr">Développeur .NET Full Stack Senior</span><span class="en">Senior .NET Full Stack Developer</span><span class="de">Senior .NET Full-Stack-Entwickler</span></h3><span class="when"><span class="fr">Juin 2022 – Présent</span><span class="en">Jun 2022 – Present</span><span class="de">Juni 2022 – heute</span></span></div>
         <div class="org">TECHNOSOFT ENGINEERING · Tunis</div>
         <div class="feature">
-          <h4><span class="fr">Projet phare : application GMAO web & mobile</span><span class="en">Flagship project: web & mobile CMMS</span></h4>
-          <p><span class="fr">Gestion de Maintenance Assistée par Ordinateur, déployée sur des sites industriels à l'international. J'ai formé et accompagné les utilisateurs finaux sur place et à distance.</span><span class="en">A Computerized Maintenance Management System used on industrial sites worldwide. I trained and supported end users on site and remotely.</span></p>
+          <h4><span class="fr">Projet phare : application GMAO web & mobile</span><span class="en">Flagship project: web & mobile CMMS</span><span class="de">Leuchtturmprojekt: Web- & Mobile-CMMS</span></h4>
+          <p><span class="fr">Gestion de Maintenance Assistée par Ordinateur, déployée sur des sites industriels à l'international. J'ai formé et accompagné les utilisateurs finaux sur place et à distance.</span><span class="en">A Computerized Maintenance Management System used on industrial sites worldwide. I trained and supported end users on site and remotely.</span><span class="de">Ein computergestütztes Instandhaltungssystem (CMMS), das an Industriestandorten weltweit eingesetzt wird. Ich habe die Endanwender vor Ort und remote geschult und betreut.</span></p>
           <div class="countries">
-            <span class="country">TN <i class="fr">Tunisie</i><i class="en">Tunisia</i></span>
-            <span class="country">SN <i class="fr">Sénégal</i><i class="en">Senegal</i></span>
-            <span class="country">MA <i class="fr">Maroc</i><i class="en">Morocco</i></span>
-            <span class="country">ID <i class="fr">Indonésie</i><i class="en">Indonesia</i></span>
-            <span class="country">BR <i class="fr">Brésil</i><i class="en">Brazil</i></span>
-            <span class="country">+ <i class="fr">autres sites</i><i class="en">other sites</i></span>
+            <span class="country">TN <i class="fr">Tunisie</i><i class="en">Tunisia</i><i class="de">Tunesien</i></span>
+            <span class="country">SN <i class="fr">Sénégal</i><i class="en">Senegal</i><i class="de">Senegal</i></span>
+            <span class="country">MA <i class="fr">Maroc</i><i class="en">Morocco</i><i class="de">Marokko</i></span>
+            <span class="country">ID <i class="fr">Indonésie</i><i class="en">Indonesia</i><i class="de">Indonesien</i></span>
+            <span class="country">BR <i class="fr">Brésil</i><i class="en">Brazil</i><i class="de">Brasilien</i></span>
+            <span class="country">+ <i class="fr">autres sites</i><i class="en">other sites</i><i class="de">weitere Standorte</i></span>
           </div>
         </div>
         <ul class="fr">
@@ -253,11 +260,19 @@ footer{padding-block:0 40px;color:var(--muted);font:12px/1.5 var(--f-mono);displ
           <li>Containerized with Docker, deployed to Azure and contributed to CI/CD pipelines.</li>
           <li>Unit testing with xUnit and code reviews to keep the system reliable.</li>
         </ul>
+        <ul class="de">
+          <li>Entwurf von REST-APIs in C# / .NET Core und Entwicklung des Angular-Frontends.</li>
+          <li>Mobile Entwicklung mit Xamarin und DevExpress, danach Migration zu React Native.</li>
+          <li>Performance-Optimierung mit Entity Framework Core und komplexen SQL-Server-Stored-Procedures.</li>
+          <li>Automatisierte Benachrichtigungen, Dashboards und Reports mit Hangfire (Hintergrundjobs).</li>
+          <li>Containerisierung mit Docker, Deployment auf Azure und Mitarbeit an CI/CD-Pipelines.</li>
+          <li>Unit-Tests mit xUnit und Code-Reviews für ein zuverlässiges System.</li>
+        </ul>
         <div class="chips"><span class="chip">.NET Core</span><span class="chip">EF Core 8</span><span class="chip">C#</span><span class="chip">Angular 19</span><span class="chip">DevExpress</span><span class="chip">SQL Server</span><span class="chip">Hangfire</span><span class="chip">Docker</span><span class="chip">Azure</span><span class="chip">xUnit</span><span class="chip">Xamarin</span><span class="chip">React Native</span></div>
       </article>
 
       <article class="job">
-        <div class="job-head"><h3><span class="fr">Développeur .NET Full Stack</span><span class="en">.NET Full Stack Developer</span></h3><span class="when"><span class="fr">Fév. 2022 – Avr. 2022</span><span class="en">Feb 2022 – Apr 2022</span></span></div>
+        <div class="job-head"><h3><span class="fr">Développeur .NET Full Stack</span><span class="en">.NET Full Stack Developer</span><span class="de">.NET Full-Stack-Entwickler</span></h3><span class="when"><span class="fr">Fév. 2022 – Avr. 2022</span><span class="en">Feb 2022 – Apr 2022</span><span class="de">Feb. 2022 – Apr. 2022</span></span></div>
         <div class="org">UPPER LINK · Sousse</div>
         <ul class="fr">
           <li>Migration d'Entity Framework 5 vers EF Core 6 et optimisation des tables temporelles pour l'historique.</li>
@@ -269,11 +284,16 @@ footer{padding-block:0 40px;color:var(--muted);font:12px/1.5 var(--f-mono);displ
           <li>Built and maintained a web-based document management solution.</li>
           <li>Integrated Swagger for live REST API documentation and testing.</li>
         </ul>
+        <ul class="de">
+          <li>Migration von Entity Framework 5 auf EF Core 6 und Optimierung temporaler Tabellen für die Historisierung.</li>
+          <li>Entwicklung und Wartung einer webbasierten Dokumentenmanagement-Lösung.</li>
+          <li>Integration von Swagger zur Live-Dokumentation und zum Testen der REST-APIs.</li>
+        </ul>
         <div class="chips"><span class="chip">.NET Core</span><span class="chip">EF Core 5 &amp; 6</span><span class="chip">C#</span><span class="chip">Angular 13</span><span class="chip">Azure</span></div>
       </article>
 
       <article class="job">
-        <div class="job-head"><h3><span class="fr">Développeur .NET Full Stack</span><span class="en">.NET Full Stack Developer</span></h3><span class="when"><span class="fr">Déc. 2020 – Déc. 2021</span><span class="en">Dec 2020 – Dec 2021</span></span></div>
+        <div class="job-head"><h3><span class="fr">Développeur .NET Full Stack</span><span class="en">.NET Full Stack Developer</span><span class="de">.NET Full-Stack-Entwickler</span></h3><span class="when"><span class="fr">Déc. 2020 – Déc. 2021</span><span class="en">Dec 2020 – Dec 2021</span><span class="de">Dez. 2020 – Dez. 2021</span></span></div>
         <div class="org">LEMOGO · Teboulba</div>
         <ul class="fr">
           <li>Applications web ASP.NET Core / Blazor et Angular de gestion des stocks, achats et paie.</li>
@@ -285,11 +305,16 @@ footer{padding-block:0 40px;color:var(--muted);font:12px/1.5 var(--f-mono);displ
           <li>Dynamic reporting module to improve purchase tracking.</li>
           <li>SQL Server query optimization for large data volumes.</li>
         </ul>
+        <ul class="de">
+          <li>ASP.NET Core / Blazor- und Angular-Webanwendungen für Lager, Einkauf und Lohnabrechnung.</li>
+          <li>Dynamisches Reporting-Modul für eine bessere Einkaufsverfolgung.</li>
+          <li>Optimierung von SQL-Server-Abfragen für große Datenmengen.</li>
+        </ul>
         <div class="chips"><span class="chip">ASP.NET Core</span><span class="chip">Blazor</span><span class="chip">C#</span><span class="chip">Angular</span><span class="chip">SQL Server</span><span class="chip">Bootstrap</span></div>
       </article>
 
       <article class="job">
-        <div class="job-head"><h3><span class="fr">Développeur .NET MVC</span><span class="en">.NET MVC Developer</span></h3><span class="when"><span class="fr">Août 2019 – Juil. 2020</span><span class="en">Aug 2019 – Jul 2020</span></span></div>
+        <div class="job-head"><h3><span class="fr">Développeur .NET MVC</span><span class="en">.NET MVC Developer</span><span class="de">.NET-MVC-Entwickler</span></h3><span class="when"><span class="fr">Août 2019 – Juil. 2020</span><span class="en">Aug 2019 – Jul 2020</span><span class="de">Aug. 2019 – Juli 2020</span></span></div>
         <div class="org">ETIC EUROPE · Monastir</div>
         <ul class="fr">
           <li>Application Support Service pour la gestion des machines d'étiquetage.</li>
@@ -301,56 +326,61 @@ footer{padding-block:0 40px;color:var(--muted);font:12px/1.5 var(--f-mono);displ
           <li>Intuitive user interface built with Bootstrap 4 and jQuery.</li>
           <li>SQL query optimization to speed up ticket processing.</li>
         </ul>
+        <ul class="de">
+          <li>Support-Service-Anwendung zur Verwaltung von Etikettiermaschinen.</li>
+          <li>Intuitive Benutzeroberfläche mit Bootstrap 4 und jQuery.</li>
+          <li>Optimierung von SQL-Abfragen zur schnelleren Ticketbearbeitung.</li>
+        </ul>
         <div class="chips"><span class="chip">ASP.NET MVC</span><span class="chip">C#</span><span class="chip">jQuery</span><span class="chip">Ajax</span><span class="chip">SQL Server</span><span class="chip">Bootstrap 4</span></div>
       </article>
     </div>
   </section>
 
   <section class="block" id="skills">
-    <div class="rail"><h2><span class="fr">Compétences</span><span class="en">Skills</span></h2><p><span class="fr">Stack technique</span><span class="en">Tech stack</span></p></div>
+    <div class="rail"><h2><span class="fr">Compétences</span><span class="en">Skills</span><span class="de">Kompetenzen</span></h2><p><span class="fr">Stack technique</span><span class="en">Tech stack</span><span class="de">Tech-Stack</span></p></div>
     <div class="skills">
       <div><h3>Backend</h3><div class="chips"><span class="chip hot">C#</span><span class="chip hot">.NET 6–8</span><span class="chip hot">ASP.NET Core</span><span class="chip">ASP.NET MVC</span><span class="chip hot">Entity Framework Core</span><span class="chip">Blazor</span></div></div>
       <div><h3>Frontend</h3><div class="chips"><span class="chip hot">Angular 14–19</span><span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">React Native</span><span class="chip">HTML5 / CSS3</span><span class="chip">DevExpress</span><span class="chip">Bootstrap</span></div></div>
       <div><h3>Architecture</h3><div class="chips"><span class="chip hot">Microservices</span><span class="chip hot">API REST</span><span class="chip">SOLID</span><span class="chip">Dependency Injection</span><span class="chip">Design Patterns</span><span class="chip">MVC</span></div></div>
-      <div><h3><span class="fr">Bases de données</span><span class="en">Databases</span></h3><div class="chips"><span class="chip hot">SQL Server</span><span class="chip">MySQL</span><span class="chip">MongoDB</span><span class="chip">GraphQL</span></div></div>
+      <div><h3><span class="fr">Bases de données</span><span class="en">Databases</span><span class="de">Datenbanken</span></h3><div class="chips"><span class="chip hot">SQL Server</span><span class="chip">MySQL</span><span class="chip">MongoDB</span><span class="chip">GraphQL</span></div></div>
       <div><h3>Cloud &amp; DevOps</h3><div class="chips"><span class="chip hot">Azure</span><span class="chip">AZ-900</span><span class="chip">AZ-104</span><span class="chip">AZ-305</span><span class="chip hot">Docker</span><span class="chip">Jenkins</span><span class="chip">GitLab CI/CD</span><span class="chip">GitHub Actions</span><span class="chip">Azure DevOps</span></div></div>
-      <div><h3><span class="fr">Tests &amp; qualité</span><span class="en">Testing &amp; quality</span></h3><div class="chips"><span class="chip hot">xUnit</span><span class="chip">NUnit</span><span class="chip">Swagger</span><span class="chip">Postman</span></div><h3 style="margin-top:22px"><span class="fr">Outils</span><span class="en">Tools</span></h3><div class="chips"><span class="chip">Git</span><span class="chip">GitLab</span><span class="chip">GitHub</span><span class="chip">Hangfire</span><span class="chip">Visual Studio</span><span class="chip">VS Code</span></div></div>
+      <div><h3><span class="fr">Tests &amp; qualité</span><span class="en">Testing &amp; quality</span><span class="de">Tests &amp; Qualität</span></h3><div class="chips"><span class="chip hot">xUnit</span><span class="chip">NUnit</span><span class="chip">Swagger</span><span class="chip">Postman</span></div><h3 style="margin-top:22px"><span class="fr">Outils</span><span class="en">Tools</span><span class="de">Werkzeuge</span></h3><div class="chips"><span class="chip">Git</span><span class="chip">GitLab</span><span class="chip">GitHub</span><span class="chip">Hangfire</span><span class="chip">Visual Studio</span><span class="chip">VS Code</span></div></div>
     </div>
   </section>
 
   <section class="block" id="education">
-    <div class="rail"><h2><span class="fr">Formation</span><span class="en">Education</span></h2><p><span class="fr">Diplômes &amp; certifications</span><span class="en">Degrees &amp; certifications</span></p></div>
+    <div class="rail"><h2><span class="fr">Formation</span><span class="en">Education</span><span class="de">Ausbildung</span></h2><p><span class="fr">Diplômes &amp; certifications</span><span class="en">Degrees &amp; certifications</span><span class="de">Abschlüsse &amp; Zertifikate</span></p></div>
     <div>
       <div class="edu">
-        <div class="edu-item"><h3><span class="fr">Mastère Professionnel – Ingénierie du Logiciel Open Source (Bac+5)</span><span class="en">Professional Master's – Open Source Software Engineering</span></h3><span class="when">2023 – 2025</span><p><span class="fr">Institut Supérieur d'Informatique (ISI), Ariana</span><span class="en">Higher Institute of Computer Science (ISI), Ariana</span></p></div>
-        <div class="edu-item"><h3><span class="fr">Licence Appliquée – Informatique de Gestion</span><span class="en">Applied Bachelor's – Business Computing</span></h3><span class="when">2015 – 2018</span><p><span class="fr">Institut Supérieur d'Informatique et de Gestion de Kairouan</span><span class="en">Higher Institute of Computer Science and Management, Kairouan</span></p></div>
+        <div class="edu-item"><h3><span class="fr">Mastère Professionnel – Ingénierie du Logiciel Open Source (Bac+5)</span><span class="en">Professional Master's – Open Source Software Engineering</span><span class="de">Professioneller Master – Open-Source-Softwaretechnik</span></h3><span class="when">2023 – 2025</span><p><span class="fr">Institut Supérieur d'Informatique (ISI), Ariana</span><span class="en">Higher Institute of Computer Science (ISI), Ariana</span><span class="de">Höheres Institut für Informatik (ISI), Ariana</span></p></div>
+        <div class="edu-item"><h3><span class="fr">Licence Appliquée – Informatique de Gestion</span><span class="en">Applied Bachelor's – Business Computing</span><span class="de">Angewandter Bachelor – Wirtschaftsinformatik</span></h3><span class="when">2015 – 2018</span><p><span class="fr">Institut Supérieur d'Informatique et de Gestion de Kairouan</span><span class="en">Higher Institute of Computer Science and Management, Kairouan</span><span class="de">Höheres Institut für Informatik und Management, Kairouan</span></p></div>
       </div>
       <h3 class="sub">Certifications</h3>
       <div class="certs">
-        <div class="cert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg><span class="fr">Certification C# Avancé</span><span class="en">Advanced C# Certification</span></div>
-        <div class="cert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg><span class="fr">Certification Angular Framework</span><span class="en">Angular Framework Certification</span></div>
-        <div class="cert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg><span class="fr">Application e-commerce – .NET Core &amp; Angular</span><span class="en">E-commerce application – .NET Core &amp; Angular</span></div>
-        <div class="cert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg><span class="fr">Mobile cross-platform – .NET MAUI &amp; Xamarin</span><span class="en">Cross-platform mobile – .NET MAUI &amp; Xamarin</span></div>
+        <div class="cert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg><span class="fr">Certification C# Avancé</span><span class="en">Advanced C# Certification</span><span class="de">Zertifizierung C# für Fortgeschrittene</span></div>
+        <div class="cert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg><span class="fr">Certification Angular Framework</span><span class="en">Angular Framework Certification</span><span class="de">Zertifizierung Angular Framework</span></div>
+        <div class="cert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg><span class="fr">Application e-commerce – .NET Core &amp; Angular</span><span class="en">E-commerce application – .NET Core &amp; Angular</span><span class="de">E-Commerce-Anwendung – .NET Core &amp; Angular</span></div>
+        <div class="cert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg><span class="fr">Mobile cross-platform – .NET MAUI &amp; Xamarin</span><span class="en">Cross-platform mobile – .NET MAUI &amp; Xamarin</span><span class="de">Plattformübergreifende Mobile-Entwicklung – .NET MAUI &amp; Xamarin</span></div>
       </div>
-      <h3 class="sub"><span class="fr">Langues</span><span class="en">Languages</span></h3>
+      <h3 class="sub"><span class="fr">Langues</span><span class="en">Languages</span><span class="de">Sprachen</span></h3>
       <div class="langs">
-        <div class="lg"><b><span class="fr">Arabe</span><span class="en">Arabic</span></b><small><span class="fr">Langue maternelle</span><span class="en">Native</span></small><div class="cefr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="cefr-scale"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div></div>
-        <div class="lg"><b><span class="fr">Français</span><span class="en">French</span></b><small><span class="fr">Courant · C1</span><span class="en">Fluent · C1</span></small><div class="cefr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="cefr-scale"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div></div>
-        <div class="lg"><b><span class="fr">Anglais</span><span class="en">English</span></b><small><span class="fr">Professionnel · B2</span><span class="en">Professional · B2</span></small><div class="cefr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div><div class="cefr-scale"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div></div>
-        <div class="lg"><b><span class="fr">Allemand</span><span class="en">German</span></b><small><span class="fr">A2 · B1 en cours</span><span class="en">A2 · B1 in progress</span></small><div class="cefr"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div><div class="cefr-scale"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div></div>
+        <div class="lg"><b><span class="fr">Arabe</span><span class="en">Arabic</span><span class="de">Arabisch</span></b><small><span class="fr">Langue maternelle</span><span class="en">Native</span><span class="de">Muttersprache</span></small><div class="cefr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="cefr-scale"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div></div>
+        <div class="lg"><b><span class="fr">Français</span><span class="en">French</span><span class="de">Französisch</span></b><small><span class="fr">Courant · C1</span><span class="en">Fluent · C1</span><span class="de">Fließend · C1</span></small><div class="cefr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="cefr-scale"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div></div>
+        <div class="lg"><b><span class="fr">Anglais</span><span class="en">English</span><span class="de">Englisch</span></b><small><span class="fr">Professionnel · B2</span><span class="en">Professional · B2</span><span class="de">Verhandlungssicher · B2</span></small><div class="cefr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div><div class="cefr-scale"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div></div>
+        <div class="lg"><b><span class="fr">Allemand</span><span class="en">German</span><span class="de">Deutsch</span></b><small><span class="fr">A2 · B1 en cours</span><span class="en">A2 · B1 in progress</span><span class="de">A2 · B1 in Arbeit</span></small><div class="cefr"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div><div class="cefr-scale"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div></div>
       </div>
     </div>
   </section>
 
   <section class="contact" id="contact">
     <div>
-      <h2><span class="fr">Travaillons ensemble</span><span class="en">Let's work together</span></h2>
-      <p><span class="fr">Un projet .NET / Angular, une migration EF Core ou une base SQL Server à accélérer ? Écrivez-moi, je réponds rapidement.</span><span class="en">A .NET / Angular project, an EF Core migration or a SQL Server database to speed up? Write to me and I'll get back to you quickly.</span></p>
+      <h2><span class="fr">Travaillons ensemble</span><span class="en">Let's work together</span><span class="de">Lassen Sie uns zusammenarbeiten</span></h2>
+      <p><span class="fr">Un projet .NET / Angular, une migration EF Core ou une base SQL Server à accélérer ? Écrivez-moi, je réponds rapidement.</span><span class="en">A .NET / Angular project, an EF Core migration or a SQL Server database to speed up? Write to me and I'll get back to you quickly.</span><span class="de">Ein .NET-/Angular-Projekt, eine EF-Core-Migration oder eine SQL-Server-Datenbank, die schneller werden soll? Schreiben Sie mir, ich antworte zügig.</span></p>
     </div>
     <div class="c-list">
-      <div class="c-row"><div><small>Email</small><span id="email">mohieddineghannem.dev@gmail.com</span></div><button id="copy-email" type="button"><span class="fr">Copier</span><span class="en">Copy</span></button></div>
+      <div class="c-row"><div><small>Email</small><span id="email">mohieddineghannem.dev@gmail.com</span></div><button id="copy-email" type="button"><span class="fr">Copier</span><span class="en">Copy</span><span class="de">Kopieren</span></button></div>
       <div class="c-row"><div><small>LinkedIn</small><a href="https://www.linkedin.com/in/mohieddine-ghannem-408173165" target="_blank" rel="noopener">in/mohieddine-ghannem</a></div><a class="go" href="https://www.linkedin.com/in/mohieddine-ghannem-408173165" target="_blank" rel="noopener">→</a></div>
-      <div class="c-row"><div><small><span class="fr">Localisation</span><span class="en">Location</span></small><span><span class="fr">Tunis, Tunisie</span><span class="en">Tunis, Tunisia</span> · UTC+1</span></div></div>
+      <div class="c-row"><div><small><span class="fr">Localisation</span><span class="en">Location</span><span class="de">Standort</span></small><span><span class="fr">Tunis, Tunisie</span><span class="en">Tunis, Tunisia</span><span class="de">Tunis, Tunesien</span> · UTC+1</span></div></div>
     </div>
   </section>
 
@@ -369,13 +399,13 @@ footer{padding-block:0 40px;color:var(--muted);font:12px/1.5 var(--f-mono);displ
   }
   var saved=null;
   try{saved=localStorage.getItem('mg-lang')}catch(e){}
-  if(!saved){saved=(navigator.language||'fr').toLowerCase().indexOf('fr')===0?'fr':((navigator.language||'').toLowerCase().indexOf('ar')===0?'fr':'en')}
+  if(!saved){var nl=(navigator.language||'fr').toLowerCase();saved=nl.indexOf('de')===0?'de':(nl.indexOf('en')===0?'en':'fr')}
   setLang(saved);
   document.querySelectorAll('.lang button').forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.set)})});
 
   var btn=document.getElementById('copy-email'), email=document.getElementById('email');
   btn.addEventListener('click',function(){
-    var done=function(){var l=page.dataset.lang;btn.innerHTML=l==='fr'?'Copié ✓':'Copied ✓';setTimeout(function(){btn.innerHTML='<span class="fr">Copier</span><span class="en">Copy</span>'},1800)};
+    var done=function(){var l=page.dataset.lang;btn.innerHTML=l==='fr'?'Copié ✓':(l==='de'?'Kopiert ✓':'Copied ✓');setTimeout(function(){btn.innerHTML='<span class="fr">Copier</span><span class="en">Copy</span><span class="de">Kopieren</span>'},1800)};
     var fallback=function(){var r=document.createRange();r.selectNodeContents(email);var s=getSelection();s.removeAllRanges();s.addRange(r)};
     try{navigator.clipboard.writeText(email.textContent).then(done,fallback)}catch(e){fallback()}
   });
